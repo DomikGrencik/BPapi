@@ -15,7 +15,7 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id('id_task');
-            $table->enum('category', ['F1', 'F2', 'F2']);
+            $table->enum('category', ['F1', 'F2', 'F3']);
             $table->enum(
                 'subcategory',
                 [

@@ -17,14 +17,14 @@ class CreateShortTestsTable extends Migration
             $table->id('id_short_test');
             $table->date('date');
             $table->float('DX');
-            $table->integer('id_patient')->unsigned();
+            $table->biginteger('id_patient')->unsigned();
             $table->timestamps();
         });
 
         Schema::table('short_tests', function (Blueprint $table) {
             $table->foreign('id_patient')
                 ->references('id_patient')
-                ->on('patient')
+                ->on('patients')
                 ->onDelete('cascade');
         });
     }
