@@ -17,7 +17,6 @@ class CreateShortTestTasksTable extends Migration
             $table->biginteger('id_short_test')->unsigned();
             $table->biginteger('id_task')->unsigned();
             $table->float('points');
-            $table->timestamps();
         });
 
         Schema::table('short_test_tasks', function (Blueprint $table) {
