@@ -34,16 +34,16 @@ Route::prefix('v1')->group(function () {
         [AuthController::class, 'logout']
     );
 
-    Route::middleware('auth')->resource(
+    Route::middleware('auth')->get(
         'users',
-        [UserController::class]
+        [UserController::class, 'index']
     );
     Route::middleware('auth')->get(
-        'me',
+        'profile',
         [UserController::class, 'show']
     );
     Route::middleware('auth')->put(
-        'me/update',
+        'profile/update',
         [UserController::class, 'update']
     );
 });

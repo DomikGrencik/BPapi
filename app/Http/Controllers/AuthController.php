@@ -27,6 +27,7 @@ class AuthController extends Controller
         ]);
         $login = 'x' . substr($user->surename, 0, 5) . $user->id;
         $user->update(['login' => $login]);
+        $user->assignRole("user");
 
         $user
             ? response(['message' => 'User registered.'], 201)

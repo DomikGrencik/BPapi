@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use \App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,7 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        return auth()->user()->cannot('perform_admin_activty')
+            ? $this->error('You do not have sufficient access rights.')
+            : User::all();
     }
 
     /**
@@ -24,7 +27,7 @@ class UserController extends Controller
      */
     public function show()
     {
-        return auth()->user();
+        return new UserResource(auth()->user());
     }
 
     /**
@@ -41,7 +44,7 @@ class UserController extends Controller
         $id = auth()->user()->id;
         $user = User::find($id);
 
-        $user->update(request()->only('login', 'name', 'surename'));
+        $user->update(request()->only('name', 'surename'));
         if (request()->password) {
             $user->update(['password' => Hash::make(request()->password)]);
         }
