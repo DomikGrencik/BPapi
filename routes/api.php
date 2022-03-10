@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\AuthController;
+use \App\Http\Controllers\UserController;
+use \App\Http\Controllers\PatientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function () {
+    Route::post(
+        'register',
+        [AuthController::class, 'register']
+    );
+    Route::middleware('auth')->delete(
+        'unregister',
+        [AuthController::class, 'unregister']
+    );
+    Route::post(
+        'login',
+        [AuthController::class, 'login']
+    );
+    Route::middleware('auth')->post(
+        'logout',
+        [AuthController::class, 'logout']
+    );
+
+    Route::middleware('auth')->resource(
+        'users',
+        [UserController::class]
+    );
+    Route::middleware('auth')->get(
+        'me',
+        [UserController::class, 'show']
+    );
+    Route::middleware('auth')->put(
+        'me/update',
+        [UserController::class, 'update']
+    );
 });
