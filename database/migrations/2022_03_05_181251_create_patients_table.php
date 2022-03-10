@@ -20,14 +20,14 @@ class CreatePatientsTable extends Migration
             $table->string('initials');
             $table->date('birth_year');
             $table->enum('gender', ['M', 'F']);
-            $table->biginteger('id_therapist')->unsigned();
+            $table->biginteger('id')->unsigned();
             $table->timestamps();
         });
 
         Schema::table('patients', function (Blueprint $table) {
-            $table->foreign('id_therapist')
-                ->references('id_therapist')
-                ->on('therapists')
+            $table->foreign('id')
+                ->references('id')
+                ->on('users')
                 ->onDelete('cascade');
         });
     }
