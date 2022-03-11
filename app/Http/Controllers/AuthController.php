@@ -26,7 +26,7 @@ class AuthController extends Controller
             'password' => Hash::make(request()->password)
         ]);
 
-        $sureNameCut = mb_strtolower(substr($user->surename, 0, 6), 'UTF-8');
+        $sureNameCut = mb_strtolower(substr($user->surename . $user->name, 0, 5), 'UTF-8');
 
         $login = strval('x' . $sureNameCut . $user->id);
         $user->update(['login' => $login]);
