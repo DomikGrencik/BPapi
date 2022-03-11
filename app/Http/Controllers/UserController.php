@@ -15,9 +15,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        return auth()->user()->cannot('perform_admin_activty')
-            ? $this->error('You do not have sufficient access rights.')
-            : User::all();
+        if (auth()->user()->hasRole('admin')) {
+            return User::all()->map(function ($user) {
+                return new UserResource($user);
+            });
+        }
+
+        return response([
+            'message' => 'You do not have sufficient access rights.'
+        ], 403);
     }
 
     /**

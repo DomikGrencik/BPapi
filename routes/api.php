@@ -21,7 +21,7 @@ Route::prefix('v1')->group(function () {
         'register',
         [AuthController::class, 'register']
     );
-    Route::middleware('auth')->delete(
+    Route::middleware('auth:api')->delete(
         'unregister',
         [AuthController::class, 'unregister']
     );
@@ -29,20 +29,20 @@ Route::prefix('v1')->group(function () {
         'login',
         [AuthController::class, 'login']
     );
-    Route::middleware('auth')->post(
+    Route::middleware('auth:api')->post(
         'logout',
         [AuthController::class, 'logout']
     );
 
-    Route::middleware('auth')->get(
+    Route::middleware('auth:api')->get(
         'users',
         [UserController::class, 'index']
     );
-    Route::middleware('auth')->get(
+    Route::middleware('auth:api')->get(
         'profile',
         [UserController::class, 'show']
     );
-    Route::middleware('auth')->put(
+    Route::middleware('auth:api')->put(
         'profile/update',
         [UserController::class, 'update']
     );

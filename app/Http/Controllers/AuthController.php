@@ -25,13 +25,21 @@ class AuthController extends Controller
             'surename' => request()->surename,
             'password' => Hash::make(request()->password)
         ]);
-        $login = 'x' . substr($user->surename, 0, 5) . $user->id;
+
+        $sureNameCut = mb_strtolower(substr($user->surename, 0, 6), 'UTF-8');
+
+        $login = strval('x' . $sureNameCut . $user->id);
         $user->update(['login' => $login]);
         $user->assignRole("user");
 
-        $user
-            ? response(['message' => 'User registered.'], 201)
-            : response(['message' => 'Failed to register.'], 400);
+        if ($user) {
+            return response([
+                'message' => 'User registered.'
+            ], 201);
+        }
+        return response([
+            'message' => 'Failed to register.'
+        ], 400);
     }
 
     /**
@@ -42,9 +50,14 @@ class AuthController extends Controller
     {
         $user = auth()->user();
 
-        (User::destroy($user->id))
-            ? response(['message' => 'User account unregistered.'], 200)
-            : response(['message' => 'Failed to unregister'], 400);
+        if (User::destroy($user->id)) {
+            return response([
+                'message' => 'User account unregistered.'
+            ]);
+        }
+        return response([
+            'message' => 'Failed to unregister'
+        ], 400);
     }
 
     /**
@@ -59,11 +72,16 @@ class AuthController extends Controller
         ]);
 
         $credentials = request()->only(['login', 'password']);
-        $token = auth()->attempt($credentials);
+        $token = auth('api')->attempt($credentials);
 
-        return $token ?
-            response()->json(compact('token')) :
-            response(['message' => 'Bad login or password.'], 401);
+        if ($token) {
+            return response([
+                'token' => $token
+            ]);
+        }
+        return response([
+            'message' => 'Bad login or password.'
+        ], 401);
     }
 
     /**
@@ -73,6 +91,8 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return response(['message' => 'Logout.'], 200);
+        return response([
+            'message' => 'Logout.'
+        ]);
     }
 }
