@@ -32,11 +32,11 @@ class Patient extends Model
 
     public function tests()
     {
-        return $this->hasMany(Test::class);
+        return $this->hasMany(Test::class, 'id_test', 'id_patient');
     }
 
     public function short_tests()
     {
-        return $this->hasMany(ShortTest::class);
+        return $this->hasMany(ShortTest::class, 'id_short_test', 'id_patient');
     }
 }

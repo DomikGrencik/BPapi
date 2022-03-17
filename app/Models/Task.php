@@ -11,10 +11,11 @@ class Task extends Model
 
     protected $fillable = [
         'category',
+        'subcategory',
         'title',
         'description',
-        'test_type',
-        'subcategory'
+        'evaluation',
+        'test_type'
     ];
     protected $table = 'tasks';
     protected $primaryKey = 'id_task';

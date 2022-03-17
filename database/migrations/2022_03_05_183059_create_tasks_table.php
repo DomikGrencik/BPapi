@@ -23,7 +23,7 @@ class CreateTasksTable extends Migration
                     'jaw',
                     'tongue',
                     'respiration',
-                    'resphiration_phonation',
+                    'respiration_phonation',
                     'phonation',
                     'articulation',
                     'prosody',
@@ -31,7 +31,8 @@ class CreateTasksTable extends Migration
                 ]
             );
             $table->string('title');
-            $table->string('description');
+            $table->longText('description');
+            $table->longText('evaluation');
             $table->enum('test_type', ['T', 'ST']);
             $table->timestamps();
         });

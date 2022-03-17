@@ -18,7 +18,7 @@ class CreatePatientsTable extends Migration
             $table->string('name');
             $table->string('surename');
             $table->string('initials');
-            $table->date('birth_year');
+            $table->integer('birth_year');
             $table->enum('gender', ['M', 'F']);
             $table->biginteger('id')->unsigned();
             $table->timestamps();

@@ -11,7 +11,8 @@ class Test extends Model
 
     protected $fillable = [
         'date',
-        'DX'
+        'DX',
+        'id_patient'
     ];
     protected $table = 'tests';
     protected $primaryKey = 'id_test';

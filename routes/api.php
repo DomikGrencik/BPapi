@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\AuthController;
 use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\PatientController;
+use \App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,26 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:api')->resource(
         'patients',
         PatientController::class
+    );
+
+    Route::middleware('auth:api')->get(
+        'tasks',
+        [TaskController::class, 'index']
+    );
+
+    Route::middleware('auth:api')->get(
+        'tasks/getTestTask',
+        [TaskController::class, 'getTestTask']
+    );
+
+    Route::middleware('auth:api')->get(
+        'tasks/getShortTestTask',
+        [TaskController::class, 'getShortTestTask']
+    );
+
+    Route::middleware('auth:api')->get(
+        'tasks/{task}',
+        [TaskController::class, 'show']
     );
 
     // Route::middleware('auth:api')->post(

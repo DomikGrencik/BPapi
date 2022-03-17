@@ -11,7 +11,8 @@ class ShortTest extends Model
 
     protected $fillable = [
         'date',
-        'DX'
+        'DX',
+        'id_patient'
     ];
     protected $table = 'short_tests';
     protected $primaryKey = 'id_short_test';
