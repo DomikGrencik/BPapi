@@ -38,12 +38,36 @@ Route::prefix('v1')->group(function () {
         'users',
         [UserController::class, 'index']
     );
+    Route::middleware('auth:api')->put(
+        'users/{user}',
+        [UserController::class, 'update']
+    );
     Route::middleware('auth:api')->get(
         'profile',
         [UserController::class, 'show']
     );
     Route::middleware('auth:api')->put(
-        'profile/update',
+        'profile',
         [UserController::class, 'update']
     );
+
+    Route::middleware('auth:api')->resource(
+        'patients',
+        PatientController::class
+    );
+
+    // Route::middleware('auth:api')->post(
+    //     'patients/store',
+    //     [PatientController::class, 'store']
+    // );
+
+    // Route::middleware('auth:api')->get(
+    //     'patients',
+    //     [PatientController::class, 'index']
+    // );
+
+    // Route::middleware('auth:api')->delete(
+    //     'patients',
+    //     [PatientController::class, 'destroy']
+    // );
 });

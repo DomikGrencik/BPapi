@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
-use \App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -39,20 +40,34 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update(Request $request, $id = null)
     {
-        request()->validate([
+        $request->validate([
             'password' => 'min:8'
         ]);
 
-        $id = auth()->user()->id;
-        $user = User::find($id);
+        $user = auth()->user();
+        if ($user->hasRole('admin')) {
+            $user_id = is_null($id) ? $user->id : $id;
+        } elseif ($user->hasRole('user')) {
+            $user_id = $user->id;
+        }
 
-        $user->update(request()->only('name', 'surename'));
-        if (request()->password) {
-            $user->update(['password' => Hash::make(request()->password)]);
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return response([
+                'message' => 'User not found.'
+            ], 400);
+        }
+
+        $user->update($request->only('name', 'surename'));
+        if ($request->password) {
+            $user->update(['password' => Hash::make($request->password)]);
         }
 
         return $user;

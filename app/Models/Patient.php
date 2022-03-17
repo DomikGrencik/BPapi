@@ -14,7 +14,8 @@ class Patient extends Model
         'surename',
         'initials',
         'birth_year',
-        'gender'
+        'gender',
+        'id'
     ];
     protected $table = 'patients';
     protected $primaryKey = 'id_patient';
