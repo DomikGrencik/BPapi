@@ -16,10 +16,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('admin')) {
-            return User::all()->map(function ($user) {
-                return new UserResource($user);
-            });
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+            return User::all()
+                ->where('id', '<>', $user->id)
+                ->values()
+                ->map(function ($user) {
+                    return new UserResource($user);
+                });
         }
 
         return response([

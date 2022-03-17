@@ -24,7 +24,7 @@ class TaskController extends Controller
      */
     public function getTestTask()
     {
-        return Task::all()->where('test_type', 'T');
+        return Task::all()->where('test_type', 'T')->values();
     }
 
     /**
@@ -34,7 +34,7 @@ class TaskController extends Controller
      */
     public function getShortTestTask()
     {
-        return Task::all()->where('test_type', 'ST');
+        return Task::all()->where('test_type', 'ST')->values();
     }
 
     /**
