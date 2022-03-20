@@ -13,7 +13,7 @@ class PatientController extends Controller
      * @param  int  $id
      * @return App\Models\Patient|false
      */
-    private function getPatientById($id)
+    public function getPatientById($id)
     {
         $user = auth()->user();
 

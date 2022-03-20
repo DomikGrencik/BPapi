@@ -16,7 +16,7 @@ class CreateTestTasksTable extends Migration
         Schema::create('test_tasks', function (Blueprint $table) {
             $table->biginteger('id_test')->unsigned();
             $table->biginteger('id_task')->unsigned();
-            $table->float('points');
+            $table->enum('points', ['0', '1', '2']);
         });
 
         Schema::table('test_tasks', function (Blueprint $table) {

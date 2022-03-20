@@ -15,8 +15,6 @@ class CreateShortTestsTable extends Migration
     {
         Schema::create('short_tests', function (Blueprint $table) {
             $table->id('id_short_test');
-            $table->date('date');
-            $table->float('DX');
             $table->biginteger('id_patient')->unsigned();
             $table->timestamps();
         });

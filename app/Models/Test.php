@@ -10,8 +10,6 @@ class Test extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date',
-        'DX',
         'id_patient'
     ];
     protected $table = 'tests';

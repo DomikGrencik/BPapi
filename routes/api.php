@@ -18,76 +18,47 @@ use \App\Http\Controllers\TaskController;
 */
 
 Route::prefix('v1')->group(function () {
-    Route::post(
-        'register',
-        [AuthController::class, 'register']
-    );
-    Route::middleware('auth:api')->delete(
-        'unregister',
-        [AuthController::class, 'unregister']
-    );
-    Route::post(
-        'login',
-        [AuthController::class, 'login']
-    );
-    Route::middleware('auth:api')->post(
-        'logout',
-        [AuthController::class, 'logout']
-    );
+    Route::controller(AuthController::class)->group(function () {
+        Route::post('login', 'login');
+    });
+    Route::middleware('auth')->group(function () {
+        Route::controller(AuthController::class)->group(function () {
+            Route::post('register', 'register');
+            Route::delete('unregister', 'unregister');
+            Route::post('logout', 'logout');
+        });
+        Route::controller(UserController::class)->group(function () {
+            Route::get('users', 'index');
+            Route::put('users/{user}', 'update');
+            Route::get('profile', 'show');
+            Route::put('profile', 'update');
+        });
+        Route::controller(PatientController::class)->group(function () {
+            Route::get('patients', 'index');
+            Route::post('patients', 'store');
+            Route::get('patients/{patient}', 'show');
+            Route::put('patients/{patient}', 'update');
+            Route::delete('patients/{patient}', 'destroy');
+        });
+        Route::controller(TaskController::class)->group(function () {
+            Route::get('tasks', 'index');
+            Route::get('tasks/getTestTask', 'getTestTask');
+            Route::get('tasks/getShortTestTask', 'getShortTestTask');
+            Route::get('tasks/{task}', 'show');
+        });
+    });
 
-    Route::middleware('auth:api')->get(
-        'users',
-        [UserController::class, 'index']
-    );
-    Route::middleware('auth:api')->put(
-        'users/{user}',
-        [UserController::class, 'update']
-    );
-    Route::middleware('auth:api')->get(
-        'profile',
-        [UserController::class, 'show']
-    );
-    Route::middleware('auth:api')->put(
-        'profile',
-        [UserController::class, 'update']
-    );
-
-    Route::middleware('auth:api')->resource(
-        'patients',
-        PatientController::class
-    );
-
-    Route::middleware('auth:api')->get(
-        'tasks',
-        [TaskController::class, 'index']
-    );
-
-    Route::middleware('auth:api')->get(
-        'tasks/getTestTask',
-        [TaskController::class, 'getTestTask']
-    );
-
-    Route::middleware('auth:api')->get(
-        'tasks/getShortTestTask',
-        [TaskController::class, 'getShortTestTask']
-    );
-
-    Route::middleware('auth:api')->get(
-        'tasks/{task}',
-        [TaskController::class, 'show']
-    );
-
-    // Route::middleware('auth:api')->post(
+    // Route::post(
     //     'patients/store',
     //     [PatientController::class, 'store']
     // );
 
-    // Route::middleware('auth:api')->get(
+    // Route::get(
     //     'patients',
     //     [PatientController::class, 'index']
     // );
 
-    // Route::middleware('auth:api')->delete(
+    // Route::delete(
     //     'patients',
     //     [PatientController::class, 'destroy']
     // );

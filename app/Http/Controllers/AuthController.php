@@ -13,30 +13,39 @@ class AuthController extends Controller
      */
     public function register()
     {
-        request()->validate([
-            'name' => 'required|alpha',
-            'surename' => 'required|alpha',
-            'password' => 'required|min:8'
-        ]);
+        if (auth()->user()->hasRole('admin')) {
+            request()->validate([
+                'name' => 'required|alpha',
+                'surename' => 'required|alpha',
+                'password' => 'required|min:8'
+            ]);
 
-        $user = User::create([
-            'login' => "",
-            'name' => request()->name,
-            'surename' => request()->surename,
-            'password' => Hash::make(request()->password)
-        ]);
+            $user = User::create([
+                'login' => "",
+                'name' => request()->name,
+                'surename' => request()->surename,
+                'password' => Hash::make(request()->password)
+            ]);
 
-        $sureNameCut = mb_strtolower(substr($user->surename . $user->name, 0, 5), 'UTF-8');
+            if (!$user) {
+                return response([
+                    'message' => 'Failed to register.'
+                ], 400);
+            }
 
-        $login = strval('x' . $sureNameCut . $user->id);
-        $user->update(['login' => $login]);
-        $user->assignRole("user");
+            $sureNameCut = mb_strtolower(substr($user->surename . $user->name, 0, 5), 'UTF-8');
 
-        if ($user) {
-            return response([
-                'message' => 'User registered.'
-            ], 201);
+            $login = strval('x' . $sureNameCut . $user->id);
+            $user->update(['login' => $login]);
+            $user->assignRole("user");
+
+            if ($user) {
+                return response([
+                    'message' => 'User registered.'
+                ], 201);
+            }
         }
+
         return response([
             'message' => 'Failed to register.'
         ], 400);

@@ -10,8 +10,6 @@ class ShortTest extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date',
-        'DX',
         'id_patient'
     ];
     protected $table = 'short_tests';
