@@ -4,19 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Test;
+use App\Models\TestTask;
+use App\Models\Task;
 
-class TestController extends Controller
+class TestTaskController extends Controller
 {
-    /** @var PatientController */
-    private $patientController;
-
-    public function __construct(PatientController $patientController)
-    {
-        // parent::__construct();
-
-        $this->patientController = $patientController;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -36,32 +28,42 @@ class TestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_patient' => 'required|numeric',
+            'id_test' => 'required',
+            'id_task' => 'required',
+            'points' => 'required'
         ]);
 
-        $patient = $this->patientController->getPatientById($request->id_patient);
-
-        if (!$patient) {
-            return response([
-                'message' => 'Patient not found.'
-            ], 400);
-        }
-
-        $test = Test::create([
-            'id_patient' => $request->id_patient
-        ]);
+        $test = Test::find($request->id_test);
 
         if (!$test) {
             return response([
-                'message' => 'Failed to create test.'
+                'message' => 'Test does not exist.'
             ], 400);
         }
 
-        $patient->tests()->save($test);
+        $id_patient = $test->id_patient;
+        $task = Task::find($request->id_task);
+
+        if (!$task) {
+            return response([
+                'message' => 'Task does not exist.'
+            ], 400);
+        }
+
+        $user = auth()->user();
+        if ($user->hasRole('user')) {
+            if (count($user->patients->where('id_patient', $id_patient)) == 0) {
+                return response([
+                    'message' => 'Permission denied.'
+                ], 403);
+            }
+        }
+
+        $test->tasks()->attach($task->id_task, ['points' => $request->points]);
 
         return response([
-            'message' => 'Test added.'
-        ], 201);
+            'message' => 'Task evaluated.'
+        ]);
     }
 
     /**
@@ -95,16 +97,6 @@ class TestController extends Controller
      */
     public function destroy($id)
     {
-        $test = Test::find($id);
-
-        if (Test::destroy($test)) {
-            return response([
-                'message' => 'Test deleted.'
-            ]);
-        }
-
-        return response([
-            'message' => 'Failed to delete test.'
-        ], 400);
+        //
     }
 }

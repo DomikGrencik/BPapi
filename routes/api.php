@@ -5,6 +5,8 @@ use \App\Http\Controllers\AuthController;
 use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\PatientController;
 use \App\Http\Controllers\TaskController;
+use \App\Http\Controllers\TestController;
+use \App\Http\Controllers\TestTaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +26,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::controller(AuthController::class)->group(function () {
             Route::post('register', 'register');
-            Route::delete('unregister', 'unregister');
             Route::post('logout', 'logout');
         });
         Route::controller(UserController::class)->group(function () {
@@ -32,6 +33,7 @@ Route::prefix('v1')->group(function () {
             Route::put('users/{user}', 'update');
             Route::get('profile', 'show');
             Route::put('profile', 'update');
+            Route::delete('users/{user}', 'destroy');
         });
         Route::controller(PatientController::class)->group(function () {
             Route::get('patients', 'index');
@@ -45,6 +47,13 @@ Route::prefix('v1')->group(function () {
             Route::get('tasks/getTestTask', 'getTestTask');
             Route::get('tasks/getShortTestTask', 'getShortTestTask');
             Route::get('tasks/{task}', 'show');
+        });
+        Route::controller(TestController::class)->group(function () {
+            Route::post('tests', 'store');
+            Route::delete('tests/{test}', 'destroy');
+        });
+        Route::controller(TestTaskController::class)->group(function () {
+            Route::post('test_tasks', 'store');
         });
     });
 

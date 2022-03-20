@@ -77,4 +77,26 @@ class UserController extends Controller
 
         return $user;
     }
+
+    public function destroy($id)
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+            if ($id == $user->id) {
+                return response([
+                    'message' => 'Failed to unregister'
+                ], 400);
+            }
+
+            if (User::destroy($id)) {
+                return response([
+                    'message' => 'User account unregistered.'
+                ]);
+            }
+        }
+        return response([
+            'message' => 'Failed to unregister'
+        ], 400);
+    }
 }

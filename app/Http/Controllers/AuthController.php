@@ -51,23 +51,24 @@ class AuthController extends Controller
         ], 400);
     }
 
-    /**
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function unregister()
-    {
-        $user = auth()->user();
+    // /**
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function unregister()
+    // {
+    //     $user = auth()->user();
 
-        if (User::destroy($user->id)) {
-            return response([
-                'message' => 'User account unregistered.'
-            ]);
-        }
-        return response([
-            'message' => 'Failed to unregister'
-        ], 400);
-    }
+    //     if (User::destroy($user->id)) {
+    //         return response([
+    //             'message' => 'User account unregistered.'
+    //         ]);
+    //     }
+
+    //     return response([
+    //         'message' => 'Failed to unregister'
+    //     ], 400);
+    // }
 
     /**
      *
