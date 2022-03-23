@@ -19,6 +19,30 @@ class TestTaskController extends Controller
         //
     }
 
+    public function getTestPoints($id)
+    {
+        $test = Test::find($id);
+
+        if (!$test) {
+            return response([
+                'message' => 'Test does not exist.'
+            ], 400);
+        }
+
+        $id_patient = $test->id_patient;
+
+        $user = auth()->user();
+        if ($user->hasRole('user')) {
+            if (count($user->patients->where('id_patient', $id_patient)) == 0) {
+                return response([
+                    'message' => 'Permission denied.'
+                ], 403);
+            }
+        }
+
+        return TestTask::all()->where('id_test', $id)->values();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -86,7 +110,46 @@ class TestTaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'id_test' => 'required',
+            'points' => 'required'
+        ]);
+
+        $test = Test::find($request->id_test);
+
+        if (!$test) {
+            return response([
+                'message' => 'Test does not exist.'
+            ], 400);
+        }
+
+        $id_patient = $test->id_patient;
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response([
+                'message' => 'Task does not exist.'
+            ], 400);
+        }
+
+        $user = auth()->user();
+        if ($user->hasRole('user')) {
+            if (count($user->patients->where('id_patient', $id_patient)) == 0) {
+                return response([
+                    'message' => 'Permission denied.'
+                ], 403);
+            }
+        }
+
+        if ($test->tasks()->updateExistingPivot($id, ['points' => $request->points])) {
+            return response([
+                'message' => 'Points updated.'
+            ]);
+        }
+
+        return response([
+            'message' => 'Task was not evaluated yet.'
+        ], 403);
     }
 
     /**
