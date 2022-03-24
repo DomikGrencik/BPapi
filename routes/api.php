@@ -55,7 +55,8 @@ Route::prefix('v1')->group(function () {
         Route::controller(TestTaskController::class)->group(function () {
             Route::post('test_tasks', 'store');
             Route::post('test_tasks/{task}', 'update');
-            Route::get('test_tasks/{task}', 'getTestPoints');
+            Route::get('test_tasks/getTestPoints/{task}', 'getTestPoints');
+            Route::get('test_tasks/getTestTaskPoints/{task}', 'getTestTaskPoints');
         });
     });
 
