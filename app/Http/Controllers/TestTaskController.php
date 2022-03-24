@@ -43,6 +43,51 @@ class TestTaskController extends Controller
         return TestTask::all()->where('id_test', $id)->values();
     }
 
+    public function getTestTaskPoints(Request $request, $id)
+    {
+
+        $request->validate([
+            'id_test' => 'required',
+        ]);
+
+        $test = Test::find($request->id_test);
+
+        if (!$test) {
+            return response([
+                'message' => 'Test does not exist.'
+            ], 400);
+        }
+
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response([
+                'message' => 'Task does not exist.'
+            ], 400);
+        }
+
+        $test_task = TestTask::all()->where('id_test', $test->id_test)->where('id_task', $id)->values()->first();
+
+        if (!$test_task) {
+            return response([
+                'message' => 'Record does not exist.'
+            ], 400);
+        }
+
+        $id_patient = $test->id_patient;
+
+        $user = auth()->user();
+        if ($user->hasRole('user')) {
+            if (count($user->patients->where('id_patient', $id_patient)) == 0) {
+                return response([
+                    'message' => 'Permission denied.'
+                ], 403);
+            }
+        }
+
+        return [$task, $test_task];
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -65,7 +110,6 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        $id_patient = $test->id_patient;
         $task = Task::find($request->id_task);
 
         if (!$task) {
@@ -73,6 +117,8 @@ class TestTaskController extends Controller
                 'message' => 'Task does not exist.'
             ], 400);
         }
+
+        $id_patient = $test->id_patient;
 
         $user = auth()->user();
         if ($user->hasRole('user')) {
@@ -123,7 +169,6 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        $id_patient = $test->id_patient;
         $task = Task::find($id);
 
         if (!$task) {
@@ -131,6 +176,8 @@ class TestTaskController extends Controller
                 'message' => 'Task does not exist.'
             ], 400);
         }
+
+        $id_patient = $test->id_patient;
 
         $user = auth()->user();
         if ($user->hasRole('user')) {
