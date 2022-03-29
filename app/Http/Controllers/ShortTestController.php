@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Test;
+use App\Models\ShortTest;
 
-class TestController extends Controller
+class ShortTestController extends Controller
 {
     /** @var PatientController */
     private $patientController;
@@ -33,7 +33,7 @@ class TestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getPatientTests($id)
+    public function getPatientShortTests($id)
     {
         $patient = $this->patientController->getPatientById($id);
 
@@ -43,7 +43,7 @@ class TestController extends Controller
             ], 400);
         }
 
-        return Test::all()->where('id_patient', $id)->values();
+        return ShortTest::all()->where('id_patient', $id)->values();
     }
 
     /**
@@ -66,20 +66,20 @@ class TestController extends Controller
             ], 400);
         }
 
-        $test = Test::create([
+        $test = ShortTest::create([
             'id_patient' => $request->id_patient
         ]);
 
         if (!$test) {
             return response([
-                'message' => 'Failed to create test.'
+                'message' => 'Failed to create short test.'
             ], 400);
         }
 
         $patient->tests()->save($test);
 
         return response([
-            'message' => 'Test added.'
+            'message' => 'Short test added.'
         ], 201);
     }
 
@@ -114,7 +114,7 @@ class TestController extends Controller
      */
     public function destroy($id)
     {
-        $test = Test::find($id);
+        $test = ShortTest::find($id);
 
         $id_patient = $test->id_patient;
 
@@ -127,14 +127,14 @@ class TestController extends Controller
             }
         }
 
-        if (Test::destroy($id)) {
+        if (ShortTest::destroy($id)) {
             return response([
-                'message' => 'Test deleted.'
+                'message' => 'Short test deleted.'
             ]);
         }
 
         return response([
-            'message' => 'Failed to delete test.'
+            'message' => 'Failed to delete short test.'
         ], 400);
     }
 }

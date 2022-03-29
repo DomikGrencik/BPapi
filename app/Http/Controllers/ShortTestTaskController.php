@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Test;
-use App\Models\TestTask;
+use App\Models\ShortTest;
+use App\Models\ShortTestTask;
 use App\Models\Task;
 
-class TestTaskController extends Controller
+class ShortTestTaskController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,15 +28,15 @@ class TestTaskController extends Controller
      */
     public function getTestPoints($id)
     {
-        $test = Test::find($id);
+        $short_test = ShortTest::find($id);
 
-        if (!$test) {
+        if (!$short_test) {
             return response([
-                'message' => 'Test does not exist.'
+                'message' => 'Short test does not exist.'
             ], 400);
         }
 
-        $id_patient = $test->id_patient;
+        $id_patient = $short_test->id_patient;
 
         $user = auth()->user();
         if ($user->hasRole('user')) {
@@ -47,7 +47,7 @@ class TestTaskController extends Controller
             }
         }
 
-        return TestTask::all()->where('id_test', $id)->values();
+        return ShortTestTask::all()->where('id_short_test', $id)->values();
     }
 
     /**
@@ -56,18 +56,18 @@ class TestTaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getTestTaskPoints(Request $request, $id)
+    public function getShortTestTaskPoints(Request $request, $id)
     {
 
         $request->validate([
-            'id_test' => 'required|numeric',
+            'id_short_test' => 'required|numeric',
         ]);
 
-        $test = Test::find($request->id_test);
+        $short_test = ShortTest::find($request->id_short_test);
 
-        if (!$test) {
+        if (!$short_test) {
             return response([
-                'message' => 'Test does not exist.'
+                'message' => 'Short test does not exist.'
             ], 400);
         }
 
@@ -79,15 +79,15 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        $test_task = TestTask::all()->where('id_test', $test->id_test)->where('id_task', $id)->values()->first();
+        $short_test_task = ShortTestTask::all()->where('id_short_test', $short_test->id_short_test)->where('id_task', $id)->values()->first();
 
-        if (!$test_task) {
+        if (!$short_test_task) {
             return response([
                 'message' => 'Record does not exist.'
             ], 400);
         }
 
-        $id_patient = $test->id_patient;
+        $id_patient = $short_test->id_patient;
 
         $user = auth()->user();
         if ($user->hasRole('user')) {
@@ -98,7 +98,7 @@ class TestTaskController extends Controller
             }
         }
 
-        return [$task, $test_task];
+        return [$task, $short_test_task];
     }
 
     /**
@@ -110,16 +110,16 @@ class TestTaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_test' => 'required|numeric',
-            'id_task' => 'required|numeric|max:45',
-            'points' => 'required|numeric|max:2'
+            'id_short_test' => 'required|numeric',
+            'id_task' => 'required|numeric|min:46|max:54',
+            'points' => 'required|numeric|max:10'
         ]);
 
-        $test = Test::find($request->id_test);
+        $short_test = ShortTest::find($request->id_short_test);
 
-        if (!$test) {
+        if (!$short_test) {
             return response([
-                'message' => 'Test does not exist.'
+                'message' => 'Short test does not exist.'
             ], 400);
         }
 
@@ -131,7 +131,7 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        $id_patient = $test->id_patient;
+        $id_patient = $short_test->id_patient;
 
         $user = auth()->user();
         if ($user->hasRole('user')) {
@@ -142,7 +142,7 @@ class TestTaskController extends Controller
             }
         }
 
-        $test->tasks()->attach($task->id_task, ['points' => $request->points]);
+        $short_test->tasks()->attach($task->id_task, ['points' => $request->points]);
 
         return response([
             'message' => 'Task evaluated.'
@@ -170,15 +170,15 @@ class TestTaskController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'id_test' => 'required|numeric',
-            'points' => 'required|numeric|max:2'
+            'id_short_test' => 'required|numeric',
+            'points' => 'required|numeric|max:10'
         ]);
 
-        $test = Test::find($request->id_test);
+        $short_test = ShortTest::find($request->id_short_test);
 
-        if (!$test) {
+        if (!$short_test) {
             return response([
-                'message' => 'Test does not exist.'
+                'message' => 'Short test does not exist.'
             ], 400);
         }
 
@@ -190,7 +190,7 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        $id_patient = $test->id_patient;
+        $id_patient = $short_test->id_patient;
 
         $user = auth()->user();
         if ($user->hasRole('user')) {
@@ -201,15 +201,15 @@ class TestTaskController extends Controller
             }
         }
 
-        $test_task = TestTask::all()->where('id_test', $test->id_test)->where('id_task', $id)->values()->first();
+        $short_test_task = ShortTestTask::all()->where('id_short_test', $short_test->id_short_test)->where('id_task', $id)->values()->first();
 
-        if (!$test_task) {
+        if (!$short_test_task) {
             return response([
                 'message' => 'Task was not evaluated yet.'
             ], 400);
         }
 
-        if ($test->tasks()->updateExistingPivot($id, ['points' => $request->points])) {
+        if ($short_test->tasks()->updateExistingPivot($id, ['points' => $request->points])) {
             return response([
                 'message' => 'Points updated.'
             ]);

@@ -7,6 +7,8 @@ use \App\Http\Controllers\PatientController;
 use \App\Http\Controllers\TaskController;
 use \App\Http\Controllers\TestController;
 use \App\Http\Controllers\TestTaskController;
+use \App\Http\Controllers\ShortTestController;
+use \App\Http\Controllers\ShortTestTaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,29 +51,26 @@ Route::prefix('v1')->group(function () {
             Route::get('tasks/{task}', 'show');
         });
         Route::controller(TestController::class)->group(function () {
+            Route::get('tests/{patient}', 'getPatientTests');
             Route::post('tests', 'store');
             Route::delete('tests/{test}', 'destroy');
         });
         Route::controller(TestTaskController::class)->group(function () {
             Route::post('test_tasks', 'store');
             Route::post('test_tasks/{task}', 'update');
-            Route::get('test_tasks/getTestPoints/{task}', 'getTestPoints');
+            Route::get('test_tasks/getTestPoints/{test}', 'getTestPoints');
             Route::get('test_tasks/getTestTaskPoints/{task}', 'getTestTaskPoints');
         });
+        Route::controller(ShortTestController::class)->group(function () {
+            Route::get('short_tests/{patient}', 'getPatientShortTests');
+            Route::post('short_tests', 'store');
+            Route::delete('short_tests/{test}', 'destroy');
+        });
+        Route::controller(ShortTestTaskController::class)->group(function () {
+            Route::post('short_test_tasks', 'store');
+            Route::post('short_test_tasks/{task}', 'update');
+            Route::get('short_test_tasks/getShortTestPoints/{test}', 'getShortTestPoints');
+            Route::get('short_test_tasks/getShortTestTaskPoints/{task}', 'getShortTestTaskPoints');
+        });
     });
-
-    // Route::post(
-    //     'patients/store',
-    //     [PatientController::class, 'store']
-    // );
-
-    // Route::get(
-    //     'patients',
-    //     [PatientController::class, 'index']
-    // );
-
-    // Route::delete(
-    //     'patients',
-    //     [PatientController::class, 'destroy']
-    // );
 });

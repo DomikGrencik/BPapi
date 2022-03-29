@@ -166,7 +166,7 @@ class PatientController extends Controller
             ], 400);
         }
 
-        if (Patient::destroy($patient)) {
+        if (Patient::destroy($id)) {
             return response([
                 'message' => 'Patient deleted.'
             ]);
