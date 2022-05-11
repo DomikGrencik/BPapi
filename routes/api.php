@@ -32,6 +32,7 @@ Route::prefix('v1')->group(function () {
         });
         Route::controller(UserController::class)->group(function () {
             Route::get('users', 'index');
+            Route::get('users/{user}', 'getUser');
             Route::put('users/{user}', 'update');
             Route::get('profile', 'show');
             Route::put('profile', 'update');

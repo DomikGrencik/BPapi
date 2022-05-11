@@ -32,6 +32,17 @@ class UserController extends Controller
         ], 403);
     }
 
+    public function getUser($id){
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')){
+            return User::find($id);
+        }
+        return response([
+            'message' => 'You do not have sufficient access rights.'
+        ], 403);
+    }
+
     /**
      * Display the authenticated user.
      *
