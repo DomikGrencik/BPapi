@@ -22,12 +22,12 @@ class Patient extends Model
 
     public function getCreatedAtAttribute($value)
     {
-        return date('j M Y, G:i', strtotime($value));
+        return date('j.n.y', strtotime($value));
     }
 
     public function getUpdatedAtAttribute($value)
     {
-        return date('j M Y, G:i', strtotime($value));
+        return date('j.n.y', strtotime($value));
     }
 
     public function tests()

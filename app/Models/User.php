@@ -49,12 +49,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function getCreatedAtAttribute($value)
     {
-        return date('j M Y, G:i', strtotime($value));
+        return date('j.n.y', strtotime($value));
     }
 
     public function getUpdatedAtAttribute($value)
     {
-        return date('j M Y, G:i', strtotime($value));
+        return date('j.n.y', strtotime($value));
     }
 
     public function patients()
