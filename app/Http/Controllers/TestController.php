@@ -76,9 +76,7 @@ class TestController extends Controller
             ], 400);
         }
 
-        return response([
-            'message' => 'Test added.'
-        ], 201);
+        return $test;
     }
 
     /**

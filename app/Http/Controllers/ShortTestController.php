@@ -76,9 +76,7 @@ class ShortTestController extends Controller
             ], 400);
         }
 
-        return response([
-            'message' => 'Short test added.'
-        ], 201);
+        return $test;
     }
 
     /**
