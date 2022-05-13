@@ -76,8 +76,6 @@ class ShortTestController extends Controller
             ], 400);
         }
 
-        $patient->tests()->save($test);
-
         return response([
             'message' => 'Short test added.'
         ], 201);

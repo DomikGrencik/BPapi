@@ -76,8 +76,6 @@ class TestController extends Controller
             ], 400);
         }
 
-        $patient->tests()->save($test);
-
         return response([
             'message' => 'Test added.'
         ], 201);
