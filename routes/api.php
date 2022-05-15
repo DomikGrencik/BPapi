@@ -58,9 +58,9 @@ Route::prefix('v1')->group(function () {
         });
         Route::controller(TestTaskController::class)->group(function () {
             Route::post('test_tasks', 'store');
-            Route::post('test_tasks/{task}', 'update');
+            Route::put('test_tasks', 'update');
             Route::get('test_tasks/getTestPoints/{test}', 'getTestPoints');
-            Route::get('test_tasks/getTestTaskPoints/{task}', 'getTestTaskPoints');
+            Route::post('test_tasks/getTestTaskPoints', 'getTestTaskPoints');
         });
         Route::controller(ShortTestController::class)->group(function () {
             Route::get('short_tests/{patient}', 'getPatientShortTests');
@@ -69,9 +69,9 @@ Route::prefix('v1')->group(function () {
         });
         Route::controller(ShortTestTaskController::class)->group(function () {
             Route::post('short_test_tasks', 'store');
-            Route::post('short_test_tasks/{task}', 'update');
+            Route::put('short_test_tasks', 'update');
             Route::get('short_test_tasks/getShortTestPoints/{test}', 'getShortTestPoints');
-            Route::get('short_test_tasks/getShortTestTaskPoints/{task}', 'getShortTestTaskPoints');
+            Route::post('short_test_tasks/getShortTestTaskPoints', 'getShortTestTaskPoints');
         });
     });
 });

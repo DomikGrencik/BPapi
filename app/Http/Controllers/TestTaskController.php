@@ -53,14 +53,14 @@ class TestTaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getTestTaskPoints(Request $request, $id)
+    public function getTestTaskPoints(Request $request)
     {
-
         $request->validate([
             'id_test' => 'required|numeric',
+            'id_task' => 'required|numeric|max:45',
         ]);
 
         $test = Test::find($request->id_test);
@@ -71,7 +71,7 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        $task = Task::find($id);
+        $task = Task::find($request->id_task);
 
         if (!$task) {
             return response([
@@ -79,12 +79,14 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        $test_task = TestTask::all()->where('id_test', $test->id_test)->where('id_task', $id)->values()->first();
+        $test_task = TestTask::all()->where('id_test', $test->id_test)->where('id_task', $task->id_task)->values()->first();
 
         if (!$test_task) {
-            return response([
-                'message' => 'Record does not exist.'
-            ], 400);
+            return [
+                'id_test' => $test->id_test,
+                'id_task' => $task->id_task,
+                'points' => "-1"
+            ];
         }
 
         $id_patient = $test->id_patient;
@@ -98,7 +100,7 @@ class TestTaskController extends Controller
             }
         }
 
-        return [$task, $test_task];
+        return $test_task;
     }
 
     /**
@@ -164,13 +166,13 @@ class TestTaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $request->validate([
             'id_test' => 'required|numeric',
+            'id_task' => 'required|numeric|max:45',
             'points' => 'required|numeric|max:2'
         ]);
 
@@ -182,7 +184,7 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        $task = Task::find($id);
+        $task = Task::find($request->id_task);
 
         if (!$task) {
             return response([
@@ -201,7 +203,7 @@ class TestTaskController extends Controller
             }
         }
 
-        $test_task = TestTask::all()->where('id_test', $test->id_test)->where('id_task', $id)->values()->first();
+        $test_task = TestTask::all()->where('id_test', $test->id_test)->where('id_task', $task->id_task)->values()->first();
 
         if (!$test_task) {
             return response([
@@ -209,7 +211,7 @@ class TestTaskController extends Controller
             ], 400);
         }
 
-        if ($test->tasks()->updateExistingPivot($id, ['points' => $request->points])) {
+        if ($test->tasks()->updateExistingPivot($task->id_task, ['points' => $request->points])) {
             return response([
                 'message' => 'Points updated.'
             ]);

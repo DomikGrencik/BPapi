@@ -53,14 +53,14 @@ class ShortTestTaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getShortTestTaskPoints(Request $request, $id)
+    public function getShortTestTaskPoints(Request $request)
     {
-
         $request->validate([
             'id_short_test' => 'required|numeric',
+            'id_task' => 'required|numeric|min:46|max:54',
         ]);
 
         $short_test = ShortTest::find($request->id_short_test);
@@ -71,7 +71,7 @@ class ShortTestTaskController extends Controller
             ], 400);
         }
 
-        $task = Task::find($id);
+        $task = Task::find($request->id_task);
 
         if (!$task) {
             return response([
@@ -79,12 +79,14 @@ class ShortTestTaskController extends Controller
             ], 400);
         }
 
-        $short_test_task = ShortTestTask::all()->where('id_short_test', $short_test->id_short_test)->where('id_task', $id)->values()->first();
+        $short_test_task = ShortTestTask::all()->where('id_short_test', $short_test->id_short_test)->where('id_task', $task->id_task)->values()->first();
 
         if (!$short_test_task) {
-            return response([
-                'message' => 'Record does not exist.'
-            ], 400);
+            return [
+                'id_short_test' => $short_test->id_short_test,
+                'id_task' => $task->id_task,
+                'points' => "-1"
+            ];
         }
 
         $id_patient = $short_test->id_patient;
@@ -98,7 +100,7 @@ class ShortTestTaskController extends Controller
             }
         }
 
-        return [$task, $short_test_task];
+        return $short_test_task;
     }
 
     /**
@@ -164,13 +166,13 @@ class ShortTestTaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $request->validate([
             'id_short_test' => 'required|numeric',
+            'id_task' => 'required|numeric|min:46|max:54',
             'points' => 'required|numeric|max:10'
         ]);
 
@@ -182,7 +184,7 @@ class ShortTestTaskController extends Controller
             ], 400);
         }
 
-        $task = Task::find($id);
+        $task = Task::find($request->id_task);
 
         if (!$task) {
             return response([
@@ -201,7 +203,7 @@ class ShortTestTaskController extends Controller
             }
         }
 
-        $short_test_task = ShortTestTask::all()->where('id_short_test', $short_test->id_short_test)->where('id_task', $id)->values()->first();
+        $short_test_task = ShortTestTask::all()->where('id_short_test', $short_test->id_short_test)->where('id_task', $task->id_task)->values()->first();
 
         if (!$short_test_task) {
             return response([
@@ -209,7 +211,7 @@ class ShortTestTaskController extends Controller
             ], 400);
         }
 
-        if ($short_test->tasks()->updateExistingPivot($id, ['points' => $request->points])) {
+        if ($short_test->tasks()->updateExistingPivot($task->id_task, ['points' => $request->points])) {
             return response([
                 'message' => 'Points updated.'
             ]);
