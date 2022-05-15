@@ -15,19 +15,19 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id('id_task');
-            $table->enum('category', ['F1', 'F2', 'F3']);
+            $table->enum('category', ['F1 - Faciokineze', 'F2 - Fonorespirace', 'F3 - Fonetika']);
             $table->enum(
                 'subcategory',
                 [
-                    'lips',
-                    'jaw',
-                    'tongue',
-                    'respiration',
-                    'respiration_phonation',
-                    'phonation',
-                    'articulation',
-                    'prosody',
-                    'intelligibility'
+                    'Rty',
+                    'Čelist',
+                    'Jazyk',
+                    'Respirace',
+                    'Respirace při fonaci',
+                    'Fonace',
+                    'Artikulace',
+                    'Prozódie',
+                    'Srozumitelnost'
                 ]
             );
             $table->string('title');
