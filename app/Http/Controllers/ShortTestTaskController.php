@@ -26,7 +26,7 @@ class ShortTestTaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getTestPoints($id)
+    public function getShortTestPoints($id)
     {
         $short_test = ShortTest::find($id);
 
