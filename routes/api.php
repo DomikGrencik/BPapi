@@ -46,10 +46,10 @@ Route::prefix('v1')->group(function () {
             Route::delete('patients/{patient}', 'destroy');
         });
         Route::controller(TaskController::class)->group(function () {
-            Route::get('tasks', 'index'); //netreba
+            Route::get('tasks', 'index');
             Route::get('tasks/getTestTask', 'getTestTask');
             Route::get('tasks/getShortTestTask', 'getShortTestTask');
-            Route::get('tasks/{task}', 'show'); //netreba
+            Route::get('tasks/{task}', 'show');
         });
         Route::controller(TestController::class)->group(function () {
             Route::get('tests/{patient}', 'getPatientTests');
